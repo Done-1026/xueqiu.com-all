@@ -14,8 +14,7 @@ class StockInfo(RedisSpider):
     unstock = open('unstock.txt', 'w')
     redis_key = "stock_info:start_urls"
     custom_settings = {
-        'ITEM_PIPELINES': {'scrapy_redis.pipelines.RedisPipeline': 300,
-                           'stock_all.pipelines.'}
+        'ITEM_PIPELINES': {'scrapy_redis.pipelines.RedisPipeline': 300, }
     }
 
     def make_requests_from_url(self, url):
@@ -37,10 +36,11 @@ class StockInfo(RedisSpider):
                 'Referer': referer,
             }
             params = {
-                'code': comp
+                'code': comp[0]
             }
-            yield scrapy.FormRequest(url, headers=headers,formdata=params,
-                                      meta={'cookiejar':response.meta['cookiejar']}, callback=self.parse1)
+            yield scrapy.FormRequest(url, headers=headers,formdata=params, method='GET',
+                                     meta={'cookiejar': response.meta['cookiejar'], 'comp': comp[0]},
+                                     callback=self.parse1)
 
     def parse1(self, response):
         info = StockInfoItem()
@@ -54,6 +54,6 @@ class StockInfo(RedisSpider):
             info['stock_type'] = stocks['type']
             yield info
         except IndexError as e:
-            stock = urllib.parse.unquote(response.request.body.decode('utf-8').split('=')[1])
+            stock = response.meta['comp']
             print('<{0}>,未查询到上市信息!'.format(stock))
             self.unstock.write(stock+'\n')

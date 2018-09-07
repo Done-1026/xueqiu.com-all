@@ -101,6 +101,19 @@ MYSQL_DB = 'stock'
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
-PIPELINE_KEY
+#REDIS_START_URLS_KEY = 'https://xueqiu.com'
+#REDIS_START_URLS_AS_SET = True
+#REDIS_ENCODING = 'utf-8'
 
+SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
+# <class queue> : FifoQueue,PriorityQueue,LifoQueue
+#SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+#SCHEDULER_QUEUE_KEY = 'stock_info:requests'
+DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
+#SCHEDULER_DUPEFILTER_KEY = 'stock_info:dupefilter'
 
+#DUPEFILTER_DEBUG = False
+
+#SCHEDULER_PERSIST = True
+#SCHEDULER_FLUSH_ON_START = True
+#SCHEDULER_IDLE_BEFORE_CLOSE = 0
